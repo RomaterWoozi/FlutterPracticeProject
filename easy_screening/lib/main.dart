@@ -45,17 +45,19 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  final TextEditingController _textEditingController =
+      new TextEditingController();
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+//  void _incrementCounter() {
+//    setState(() {
+//      // This call to setState tells the Flutter framework that something has
+//      // changed in this State, which causes it to rerun the build method below
+//      // so that the display can reflect the updated values. If we changed
+//      // _counter without calling setState(), then the build method would not be
+//      // called again, and so nothing would appear to happen.
+//      _counter++;
+//    });
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,23 +91,109 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
+            new IconTheme(
+                data: new IconThemeData(color: Theme.of(context).accentColor),
+                child: _buildTextCompose())
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: _incrementCounter,
+//        tooltip: 'Increment',
+//        child: Icon(Icons.add),
+//      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _buildTextCompose() {
+    return new Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: new Row(
+        children: <Widget>[
+          new Flexible(
+            child: new TextField(
+              controller: _textEditingController,
+              onSubmitted: _handleSubmitted,
+              decoration:
+                  new InputDecoration.collapsed(hintText: "Send a Message"),
+            ),
+          ),
+          new Container(
+            margin: new EdgeInsets.symmetric(horizontal: 4.0),
+            child: new IconButton(
+                icon: new Icon(Icons.send),
+                onPressed: () => _handleSubmitted(_textEditingController.text)),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _handleSubmitted(String text) {
+    _textEditingController.clear();
+  }
+}
+
+
+class ChatScreenState extends State<ChatScreen>{
+
+  final List<ChatMessage>  _message=<ChatMessage>[];
+  final TextEditingController _textEditingController=new TextEditingController();
+
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return null;
+  }
+
+  void _handleSubmitted(String text){
+         _textEditingController.clear();
+         ChatMessage message=new ChatMessage(text: text,);
+         setState(() {
+           _message.insert(0, message);
+         });
+  }
+
+}
+
+
+
+
+
+
+const String _name="Your Name";
+
+class ChatMessage extends StatelessWidget{
+  ChatMessage({this.text});
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return new Container(
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          new Container(
+              margin: const EdgeInsets.only(right: 16.0),
+            child: new CircleAvatar(child: new Text(_name[0]),),
+          ),
+          new Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Text(_name,style: Theme.of(context).textTheme.subhead),
+              new Container(
+                margin: const EdgeInsets.only(top:5.0),
+                child: new Text(text),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
